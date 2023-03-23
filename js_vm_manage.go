@@ -20,7 +20,7 @@ func (c *JsVmManage) Broadcast(message *Message) {
 	}
 }
 
-func (c *JsVmManage) GetRoomsId() []string {
+func (c *JsVmManage) GetRoomsId() map[string]struct{} {
 	c.rwLocker.RLock()
 	defer c.rwLocker.RUnlock()
 
@@ -36,12 +36,7 @@ func (c *JsVmManage) GetRoomsId() []string {
 		}
 	}
 
-	roomsId := make([]string, 0, len(roomsIdMap))
-	for rId := range roomsIdMap {
-		roomsId = append(roomsId, rId)
-	}
-
-	return roomsId
+	return roomsIdMap
 }
 
 func (c *JsVmManage) AddJsFile(fileName string) error {

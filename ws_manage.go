@@ -192,24 +192,73 @@ func (c *WsManage) Stop() {
 	c.rwLocker.Lock()
 	defer c.rwLocker.Unlock()
 
-	c.ticker.Stop()
-
-	for rId, conn := range c.connects {
-		_ = conn.client.Close()
-		conn.client = nil
-		delete(c.connects, rId)
+	if c.ticker != nil {
+		c.ticker.Stop()
+		c.ticker = nil
 	}
 
-	c.connects = nil
+	if c.connects != nil {
+		for rId, conn := range c.connects {
+			_ = conn.client.Close()
+			conn.client = nil
+			delete(c.connects, rId)
+		}
+		c.connects = nil
+	}
+
+	if c.outputChan != nil {
+		close(c.outputChan)
+		c.outputChan = nil
+	}
+}
+
+func (c *WsManage) Start() {
+	c.Stop()
+
+	c.rwLocker.Lock()
+	defer c.rwLocker.Unlock()
+	c.connects = make(map[string]*WsClient)
+	c.outputChan = make(chan *Message, 10)
+	c.ticker = time.NewTicker(time.Second * 15)
+
+	go c.heartbeat()
+}
+
+func (c *WsManage) GetRoomsId() []struct {
+	RoomId     string
+	RealRoomId string
+} {
+	c.rwLocker.RLock()
+	defer c.rwLocker.RUnlock()
+
+	if c.connects == nil {
+		return nil
+	}
+
+	roomsId := make([]struct {
+		RoomId     string
+		RealRoomId string
+	}, 0)
+	for _, conn := range c.connects {
+		if conn.client == nil {
+			continue
+		}
+		roomsId = append(roomsId, struct {
+			RoomId     string
+			RealRoomId string
+		}{RoomId: conn.client.RoomId().String(), RealRoomId: conn.client.RealRoomId().String()})
+	}
+
+	return roomsId
 }
 
 func NewWsManage() *WsManage {
 	wm := &WsManage{
-		connects:   make(map[string]*WsClient),
-		outputChan: make(chan *Message, 10),
-		ticker:     time.NewTicker(time.Second * 15),
+		connects:   nil,
+		outputChan: nil,
+		ticker:     nil,
 	}
 
-	go wm.heartbeat()
+	wm.Start()
 	return wm
 }
