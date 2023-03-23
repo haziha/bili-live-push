@@ -1,7 +1,7 @@
 package main
 
 import (
-	"context"
+	"log"
 	"testing"
 )
 
@@ -9,5 +9,8 @@ func TestNewWsManage(t *testing.T) {
 	manage := NewWsManage()
 	manage.AddRoomId("21457197")
 
-	<-context.Background().Done()
+	for {
+		message := <-manage.GetOutputChan()
+		log.Printf("message: %v\n", message)
+	}
 }
