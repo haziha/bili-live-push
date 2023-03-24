@@ -36,6 +36,16 @@ function get_rooms_id() {
 
 
 function on_message(message_obj) {
+    /*
+    * message_obj结构 在 message.go 中有定义
+    *
+    * message_obj: {
+    *   MessageType: 1: 开播, 2: 下播
+    *   FromType: 1: WS方式通知, 2: HTTP轮询方式通知
+    *   RoomId: 直播间ID
+    *   RealRoomId: 直播间真实ID
+    * }
+    * */
     if (get_rooms_id().indexOf(message_obj["RoomId"]) === -1 &&
         get_rooms_id().indexOf(message_obj["RealRoomId"]) === -1) {
         echo("room id not in list:", message_obj["RoomId"], message_obj["RealRoomId"])
