@@ -3,6 +3,31 @@
 function echo(...arg) {
 }
 
+function http_request(req_obj) {
+    // 加载JS代码时会重设该函数
+    /*
+    * req_obj: {
+    *   Url: "",
+    *   Method: "",
+    *   Params: {k1: [v1, v2, ...], ...},
+    *   Body: array,
+    *   Headers: {k1: v1, k2: v2, ...},
+    *   Proxy: {
+    *       "Http": "...",
+    *       "Https": "...",
+    *   }
+    * }
+    * */
+}
+
+function bytes2string() {
+    // 加载JS代码时会重设该函数
+}
+
+function string2bytes() {
+    // 加载JS代码时会重设该函数
+}
+
 function get_rooms_id() {
     return [
         "21457197"
@@ -21,4 +46,13 @@ function on_message(message_obj) {
         `room_id: ${message_obj["RoomId"]}, ` +
         `real_room_id: ${message_obj["RealRoomId"]}`
     echo(text, message_obj)
+
+    let resp = http_request({
+        Url: "https://api.bilibili.com/x/web-interface/nav",
+        Method: "GET",
+        Proxy: {
+            Http: "http://127.0.0.1:7890",
+        }
+    })
+    echo(bytes2string(resp))
 }
