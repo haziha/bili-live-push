@@ -8,7 +8,8 @@ import (
 func TestNewManage(t *testing.T) {
 	jsManage := NewJsVmManage()
 	wsManage := NewWsManage()
-	manage := NewManage(jsManage, wsManage)
+	httpManage := NewHttpIntervalManage()
+	manage := NewManage(jsManage, wsManage, httpManage)
 	err := jsManage.AddJsFile("./example/example_full.js")
 	if err != nil {
 		panic(err)

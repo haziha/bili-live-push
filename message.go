@@ -11,6 +11,7 @@ type FromType int
 
 const (
 	FromWs FromType = 1 + iota
+	FromHttp
 )
 
 type Message struct {

@@ -98,7 +98,6 @@ func (c *WsManage) filter(cli *bili_live_ws_codec.Client, packet *bili_live_ws_c
 				Cmd string `json:"cmd"`
 			}{}
 			if err := json.Unmarshal(packet.Body, &body); err == nil && body.Cmd != "" {
-				log.Printf("%s[%s]: cmd=\"%s\"\n", cli.RoomId(), cli.RealRoomId().String(), body.Cmd)
 				if body.Cmd == "LIVE" {
 					select {
 					case c.outputChan <- &Message{
@@ -109,6 +108,7 @@ func (c *WsManage) filter(cli *bili_live_ws_codec.Client, packet *bili_live_ws_c
 					}:
 					default:
 					}
+					log.Printf("%s[%s]: cmd=\"%s\"\n", cli.RoomId(), cli.RealRoomId().String(), body.Cmd)
 				} else if body.Cmd == "PREPARING" {
 					select {
 					case c.outputChan <- &Message{
@@ -119,6 +119,7 @@ func (c *WsManage) filter(cli *bili_live_ws_codec.Client, packet *bili_live_ws_c
 					}:
 					default:
 					}
+					log.Printf("%s[%s]: cmd=\"%s\"\n", cli.RoomId(), cli.RealRoomId().String(), body.Cmd)
 				}
 			}
 		} else if packet.Operation == bili_live_ws_codec.OpHeartbeatReply {

@@ -26,17 +26,14 @@ func (s *stringArray) Set(val string) error {
 
 var jsFiles stringArray
 
-var jsVmManage *JsVmManage
-var wsManage *WsManage
-var manage *Manage
-
 func main() {
 	flag.Var(&jsFiles, "file", "JS文件路径")
 	flag.Parse()
 
-	jsVmManage = NewJsVmManage()
-	wsManage = NewWsManage()
-	manage = NewManage(jsVmManage, wsManage)
+	var jsVmManage = NewJsVmManage()
+	var wsManage = NewWsManage()
+	var httpManage = NewHttpIntervalManage()
+	var manage = NewManage(jsVmManage, wsManage, httpManage)
 
 	abs, err := filepath.Abs(*jsPath)
 	if err != nil {
