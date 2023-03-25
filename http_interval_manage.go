@@ -158,7 +158,7 @@ func (c *HttpIntervalManage) apiCheck(roomId string) {
 	room = c.connects[data.Data.RoomId.String()]
 	room.RoomId = data.Data.ShortId.String()
 	room.RealRoomId = data.Data.RoomId.String()
-	if data.Data.LiveStatus.String() == "0" && room.Living {
+	if (data.Data.LiveStatus.String() == "0" || data.Data.LiveStatus.String() == "2") && room.Living {
 		room.Living = false
 		select {
 		case c.outputChan <- &Message{

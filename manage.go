@@ -28,8 +28,10 @@ func (c *Manage) notify(message *Message) {
 	}
 
 	if c.roomsId[message.RealRoomId] && message.MessageType == MtPreparing {
+		c.roomsId[message.RealRoomId] = false
 		c.jsVmManage.Broadcast(message)
 	} else if !c.roomsId[message.RealRoomId] && message.MessageType == MtLive {
+		c.roomsId[message.RealRoomId] = true
 		c.jsVmManage.Broadcast(message)
 	}
 }
