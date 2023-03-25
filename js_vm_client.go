@@ -19,6 +19,20 @@ type JsVmClient struct {
 
 	GetRoomsId func() []string
 	OnMessage  func(*Message)
+	onTest     func()
+}
+
+func (c *JsVmClient) onTestSafe() (err error) {
+	defer func() {
+		if e := recover(); e != nil {
+			err = fmt.Errorf("onTest panic: %v", e)
+		}
+	}()
+	if c.onTest == nil {
+		return
+	}
+	c.onTest()
+	return
 }
 
 func (c *JsVmClient) OnMessageSafe(message *Message) (err error) {
@@ -82,6 +96,13 @@ func NewJsVmFromString(content string) (*JsVmClient, error) {
 		}
 	}
 
+	onTest := rt.Get("test")
+	if onTest != nil {
+		if err := rt.ExportTo(onTest, &jsVm.onTest); err != nil {
+			jsVm.onTest = nil
+		}
+	}
+
 	if err = rt.Set("echo", log.Println); err != nil {
 		return nil, err
 	}
@@ -96,6 +117,10 @@ func NewJsVmFromString(content string) (*JsVmClient, error) {
 
 	if err = rt.Set("http_request", httpRequest); err != nil {
 		return nil, err
+	}
+
+	if err := jsVm.onTestSafe(); err != nil {
+		fmt.Printf("call test failure: %v\n", err)
 	}
 
 	return jsVm, nil
