@@ -4,11 +4,11 @@ go 1.20
 
 require (
 	github.com/dop251/goja v0.0.0-20230304130813-e2f543bf4b4c
-	github.com/haziha/bili_live_ws_codec v0.0.0-20230122151256-f4f725bac845
+	github.com/haziha/bili_live_ws_codec v0.0.0-20230326002752-0aa94d529e89
 )
 
 require (
-	github.com/andybalholm/brotli v1.0.4 // indirect
+	github.com/andybalholm/brotli v1.0.5 // indirect
 	github.com/dlclark/regexp2 v1.8.1 // indirect
 	github.com/go-sourcemap/sourcemap v2.1.3+incompatible // indirect
 	github.com/gobwas/httphead v0.1.0 // indirect
