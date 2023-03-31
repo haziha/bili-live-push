@@ -4,7 +4,7 @@ go 1.20
 
 require (
 	github.com/dop251/goja v0.0.0-20230304130813-e2f543bf4b4c
-	github.com/haziha/bili_live_ws_codec v0.0.0-20230326002752-0aa94d529e89
+	github.com/haziha/bili_live_ws_codec v0.0.0-20230331004113-2725cfccf870
 )
 
 require (
